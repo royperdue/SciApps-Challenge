@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SciApps</string>
+    <string name="menu_about">About</string>
+    <string name="ok">Ok</string>
+    <string name="message">When the app is launched variables and UI components are initialized. The series of reference values stored in directory ‘raw’ are parsed into a graph data structure. The app uses an implicit intent to launch an existing file chooser so the user can select a .csv file from a directory. The .csv file is parsed into an arrayList after which each value from the graph is evaluated against the previously parsed reference values.
+	Each wavelength value in the arrayList is compared to each reference wavelength value in the graph and if it’s within + or - .5 then it’s considered a match. When a match is located the corresponding element and all intensity values for that element are returned. Each intensity value is then multiplied by the maximum existing intensity value to determine the percentage value needed for matching. Next the not-normalized intensity value is compared to the previously
+        determined percentage and if it’s within + or - .6 it’s considered a match. </string>
+</resources>

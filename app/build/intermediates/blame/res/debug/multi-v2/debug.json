@@ -1,0 +1,74 @@
+{
+    "logs": [
+        {
+            "outputFile": "/Users/royperdue/Desktop/SciApps/app/build/intermediates/res/merged/debug/values_values.arsc.flat",
+            "map": [
+                {
+                    "source": "/Users/royperdue/Desktop/SciApps/app/src/main/res/values/color.xml",
+                    "from": {
+                        "startLines": "-1,-1,-1,-1,-1,-1,-1,-1",
+                        "startColumns": "-1,-1,-1,-1,-1,-1,-1,-1",
+                        "startOffsets": "-1,-1,-1,-1,-1,-1,-1,-1"
+                    },
+                    "to": {
+                        "startLines": "2,3,4,5,6,7,8,9",
+                        "startColumns": "4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,95,138,181,224,267,310,358",
+                        "endColumns": "39,42,42,42,42,42,47,39",
+                        "endOffsets": "90,133,176,219,262,305,353,393"
+                    }
+                },
+                {
+                    "source": "/Users/royperdue/Desktop/SciApps/app/src/main/res/values/dimens.xml",
+                    "from": {
+                        "startLines": "-1,-1,-1,-1,-1,-1,-1,-1",
+                        "startColumns": "-1,-1,-1,-1,-1,-1,-1,-1",
+                        "startOffsets": "-1,-1,-1,-1,-1,-1,-1,-1"
+                    },
+                    "to": {
+                        "startLines": "10,11,12,13,14,15,16,17",
+                        "startColumns": "4,4,4,4,4,4,4,4",
+                        "startOffsets": "398,438,480,518,558,598,638,678",
+                        "endColumns": "39,41,37,39,39,39,39,39",
+                        "endOffsets": "433,475,513,553,593,633,673,713"
+                    }
+                },
+                {
+                    "source": "/Users/royperdue/Desktop/SciApps/app/src/main/res/values/styles.xml",
+                    "from": {
+                        "startLines": "-1,-1",
+                        "startColumns": "-1,-1",
+                        "startOffsets": "-1,-1"
+                    },
+                    "to": {
+                        "startLines": "24,28",
+                        "startColumns": "4,4",
+                        "startOffsets": "1861,2108",
+                        "endLines": "27,32",
+                        "endColumns": "12,12",
+                        "endOffsets": "2103,2390"
+                    }
+                },
+                {
+                    "source": "/Users/royperdue/Desktop/SciApps/app/src/main/res/values/strings.xml",
+                    "from": {
+                        "startLines": "-1,-1,5,-1",
+                        "startColumns": "-1,-1,4,-1",
+                        "startOffsets": "-1,-1,179,-1",
+                        "endLines": "-1,-1,7,-1",
+                        "endColumns": "-1,-1,93,-1",
+                        "endOffsets": "-1,-1,1193,-1"
+                    },
+                    "to": {
+                        "startLines": "18,19,20,23",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "718,763,808,1827",
+                        "endLines": "18,19,22,23",
+                        "endColumns": "44,44,93,33",
+                        "endOffsets": "758,803,1822,1856"
+                    }
+                }
+            ]
+        }
+    ]
+}

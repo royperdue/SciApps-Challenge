@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/navigation_main"
+    android:layout_width="match_parent"
+    android:layout_height="65dp"
+    android:background="@color/blue_800"
+    android:paddingBottom="5dp">
+
+    <LinearLayout
+        android:id="@+id/navigation_main_icons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:weightSum="2"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="@dimen/pad_10dp"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/navigation_file"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_folder_open_white_48dp" />
+
+        <ImageView
+            android:id="@+id/navigation_chart"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_insert_chart_white_48dp" />
+    </LinearLayout>
+</RelativeLayout>
