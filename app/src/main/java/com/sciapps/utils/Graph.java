@@ -3,150 +3,171 @@ package com.sciapps.utils;
 import com.sciapps.model.Node;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 
+/*
+ * 1. Changed the adjacency list to a hashMap that contains arrayLists and strings for keys. This allows
+ *   for direct access to any value by way of the key and is faster as a result of less iterating. Less loops
+ *   also makes for shorter, neater classes.
+ *
+ * 2. Added a method called percentDifference which takes doubles as parameters and determines if a wavelength
+ *   is <= a specified value. With this method I was able to parse all of the strings to doubles once at the
+ *   beginning as opposed to converting back and forth between double and string. This reduces processing time
+ *   and makes for cleaner code. In addition it is now possible to specify the amount of variation that's allowed
+ *   between a value and the reference value for the two to still be considered a match.
+ *
+ *
+ * */
 public class Graph {
-    private List<LinkedList<Node>> adjacencyList = new ArrayList<LinkedList<Node>>();
-    private LinkedList<Node> elementList = null;
-    private List<String> elements = new ArrayList<String>();
+    private Map<String, List<Node>> adjacencyList = new HashMap<String, List<Node>>();
+    private List<Node> elementList = null;
     private String referenceElement = "";
-    private double maxWaveLength = 0.0;
-    private double maxIntensity = 0.0;
+    private double referenceIntensity = 0.0;
 
-    public void buildGraph(String line) {
-        String[] data = line.split(",");
 
-        if (!elements.contains(data[0])) {
-            elementList = new LinkedList<Node>();
+    public void buildGraph(String element, String w, String i) {
+        double wavelength = parse(w);
+        double intensity = parse(i);
 
-            if (elementList != null)
-                adjacencyList.add(elementList);
+        addNode(element, new Node(wavelength, intensity));
+    }
 
-            elements.add(data[0]);
-            elementList.add(new Node(data[0], data[1], data[2]));
+    public void addNode(String element, Node node) {
+        if (!adjacencyList.containsKey(element)) {
+            elementList = new ArrayList<Node>();
+            elementList.add(node);
+            adjacencyList.put(element, elementList);
         } else {
-            elementList = findElementList(data[0]);
-            elementList.add(new Node(data[0], data[1], data[2]));
+            elementList = adjacencyList.get(element);
+            elementList.add(node);
         }
     }
 
-    private LinkedList<Node> findElementList(String element) {
-        for (int i = 0; i < adjacencyList.size(); i++) {
-            if (adjacencyList.get(i).get(0).equals(element)) {
-                elementList = adjacencyList.get(i);
-                break;
-            }
-        }
-        return elementList;
-    }
+    public boolean containsWavelength(double allowedPercentDifference, double wavelength) {
+        boolean containsWavelength = false;
+        Iterator iterator = adjacencyList.entrySet().iterator();
 
-    public List<Double> getReferenceIntensities(String element) {
-        List<Double> referenceIntensities = new ArrayList<Double>();
-        elementList = findElementList(element);
+        while (iterator.hasNext()) {
+            Map.Entry elementData = (Map.Entry) iterator.next();
+            elementList = (List<Node>) elementData.getValue();
 
-        if (elementList != null) {
             for (int i = 0; i < elementList.size(); i++) {
-                if (elementList.get(i).getElement().equals(element)) {
-                    referenceIntensities.add(Double.parseDouble(elementList.get(i).getIntensity()));
+                if (percentDifference(allowedPercentDifference, wavelength, elementList.get(i).getWavelength())) {
+                    containsWavelength = true;
+                    referenceIntensity = elementList.get(i).getIntensity();
+                    referenceElement = (String) elementData.getKey();
+                    break;
                 }
             }
         }
 
-        return referenceIntensities;
+        return containsWavelength;
     }
 
-    public boolean containsWaveLength(String wavelength) {
-        boolean containsWaveLength = false;
+    public boolean percentDifference(double difference, double value, double referenceValue) {
+        boolean withInRange = false;
+        double actualDifference = 0.0;
 
-        for (int l = 0; l < adjacencyList.size(); l++) {
-            elementList = adjacencyList.get(l);
-            for (int i = 0; i < elementList.size(); i++) {
-                if (elementList.get(i).getWavelength()
-                        .contains(wavelength.substring(0, wavelength.indexOf(".")))) {
-                    double roundedWavelength = Math
-                            .round(Double.parseDouble(wavelength) * 100.0) / 100.0;
-                    double d1 = Double.parseDouble(elementList.get(i).getWavelength());
-                    double d2 = roundedWavelength;
-
-                    if (Math.abs(Math.abs(d1) - Math.abs(d2)) < .5) {
-                        containsWaveLength = true;
-                        referenceElement = elementList.get(i).getElement();
-                        break;
-                    }
-                }
-            }
-        }
-
-        return containsWaveLength;
-    }
-
-    public void addNode(String element, String wavelength, String intensity) {
-        System.out.print(element + " " + wavelength + " " + intensity);
-        if (Double.parseDouble(wavelength) > maxWaveLength)
-            maxWaveLength = Double.parseDouble(wavelength);
-        if (Double.parseDouble(wavelength) > maxIntensity)
-            maxIntensity = Double.parseDouble(intensity);
-
-        if (!elements.contains(element)) {
-            elementList = new LinkedList<Node>();
-
-            if (elementList != null)
-                adjacencyList.add(elementList);
-
-            elements.add(element);
-            elementList.add(new Node(element, wavelength, intensity));
+        if (value > referenceValue) {
+            actualDifference = (((referenceValue - value) / value));
+            if (value > 1)
+                actualDifference = actualDifference * 100;
+            if (actualDifference <= difference)
+                withInRange = true;
         } else {
-            elementList = findElementList(element);
-            elementList.add(new Node(element, wavelength, intensity));
+            actualDifference = (((referenceValue - value) / referenceValue));
+            if (value > 1)
+                actualDifference = actualDifference * 100;
+            if (actualDifference <= difference)
+                withInRange = true;
         }
+
+        return withInRange;
     }
 
-    public int getElementCount(String element) {
-        int elements = 0;
+    public double normalize(double value, double minimumValue, double maximumValue) {
+        double normalizedValue = 0.0;
 
-        elementList = findElementList(element);
-        for (int i = 0; i < elementList.size(); i++) {
-            if (elementList.get(i).getElement().equals(element))
-                elements++;
+        normalizedValue = ((value - minimumValue) / (maximumValue - minimumValue));
+
+        return normalizedValue;
+    }
+
+    private double parse(String value) {
+        return Math.round(Double.parseDouble(value) * 100.0) / 100.0;
+    }
+
+    public List<Node> getAllElements() {
+        List<Node> elements = new ArrayList<Node>();
+        Iterator iterator = adjacencyList.entrySet().iterator();
+
+        while (iterator.hasNext()) {
+            Map.Entry elementData = (Map.Entry) iterator.next();
+            elementList = (List<Node>) elementData.getValue();
+
+            for (int i = 0; i < elementList.size(); i++) {
+                elements.add(elementList.get(i));
+            }
         }
 
         return elements;
     }
 
-    public double getMaxWaveLength() {
-        return maxWaveLength;
-    }
+    public List<Node> getResults() {
+        List<Node> elements = new ArrayList<Node>();
+        Iterator iterator = adjacencyList.entrySet().iterator();
+        double intensityTotal = 0.0;
 
-    public double getMaxIntensity() {
-        return maxIntensity;
+        while (iterator.hasNext()) {
+            Map.Entry elementData = (Map.Entry) iterator.next();
+            Node node = new Node();
+            elementList = (List<Node>) elementData.getValue();
+            node.setIcon(elementList.get(0).getIcon());
+            node.setLines(elementList.size());
+            node.setElement(elementList.get(0).getElement());
+            for (int i = 0; i < elementList.size(); i++) {
+               intensityTotal+= elementList.get(i).getIntensity();
+            }
+            node.setIntensity(Math.round(intensityTotal/elementList.size() * 100.0) / 100.0);
+            elements.add(node);
+        }
+
+        return elements;
     }
 
     public String getReferenceElement() {
         return referenceElement;
     }
 
-    public int getAdjacencyListSize() {
-        return adjacencyList.size();
+    public double getReferenceIntensity() {
+        return referenceIntensity;
     }
 
-    public List<LinkedList<Node>> getAdjacencyList() {
+    public Map<String, List<Node>> getAdjacencyList() {
         return adjacencyList;
     }
 
     public String toString() {
         String element = "";
 
-        for (int l = 0; l < adjacencyList.size(); l++) {
-            elementList = adjacencyList.get(l);
+        Iterator iterator = adjacencyList.entrySet().iterator();
+
+        while (iterator.hasNext()) {
+            Map.Entry spectrum = (Map.Entry) iterator.next();
+            elementList = (List<Node>) spectrum.getValue();
+
             for (int i = 0; i < elementList.size(); i++) {
-                element = element + elementList.get(i).getElement() + " " + elementList.get(i)
+                element = element + (String) spectrum.getKey() + " " + elementList.get(i)
                         .getWavelength() + " " + elementList.get(i).getIntensity() + " ";
             }
 
             element = element + "\n\n";
         }
+
         return element;
     }
 }
