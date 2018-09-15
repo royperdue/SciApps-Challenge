@@ -194,7 +194,7 @@ public class MainActivity extends Activity {
                         String[] data = line.split(",");
                         if (data.length == 3) {
                             option = 3;
-                            csvReferenceData.buildGraph(data[0], data[1], data[2]);
+                            csvReferenceData.addNode(data[0], data[1], data[2]);
                         } else if (data.length == 2) {
                             option = 2;
                             if (!data[0].equals("wavelength") || !data[1].equals("intensity")) {

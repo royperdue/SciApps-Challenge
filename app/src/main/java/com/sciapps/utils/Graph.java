@@ -29,7 +29,7 @@ public class Graph {
     private double referenceIntensity = 0.0;
 
 
-    public void buildGraph(String element, String w, String i) {
+    public void addNode(String element, String w, String i) {
         double wavelength = parse(w);
         double intensity = parse(i);
 
